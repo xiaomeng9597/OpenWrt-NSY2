@@ -124,6 +124,8 @@ wget -P feeds/luci/applications/luci-app-ttyd/luasrc/view/terminal https://xiaom
 cp -f $GITHUB_WORKSPACE/configfiles/coremark/coremark.sh package/base-files/files/bin/coremark.sh
 chmod 755 package/base-files/files/bin/coremark.sh
 
+cp -f $GITHUB_WORKSPACE/configfiles/dts/rk3588-orangepi-5-plus.dts target/linux/rockchip/files/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts
+
 # 定时限速插件
 git clone --depth=1 https://github.com/sirpdboy/luci-app-eqosplus package/luci-app-eqosplus
 

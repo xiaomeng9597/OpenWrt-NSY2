@@ -212,7 +212,7 @@
 		vin-supply = <&vcc5v0_sys>;
 	};
 
-	vbus5v0_typec: vbus-typec-regulator {
+	vbus5v0_typec: vbus5v0-typec-regulator {
 		compatible = "regulator-fixed";
 		enable-active-high;
 		gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
@@ -359,9 +359,9 @@
 			data-role = "dual";
 			label = "USB-C";
 			power-role = "dual";
-			op-sink-microwatt = <10>;
-			source-pdos = <PDO_FIXED(5000, 1400, PDO_FIXED_USB_COMM)>;
-			sink-pdos = <PDO_FIXED(5000, 10, PDO_FIXED_USB_COMM)>;
+			op-sink-microwatt = <1000000>;
+			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
+			sink-pdos = <PDO_FIXED(5000, 1000, PDO_FIXED_USB_COMM)>;
 			try-power-role = "source";
 
 			ports {
@@ -370,7 +370,6 @@
 
 				port@0 {
 					reg = <0>;
-
 					usbc0_hs: endpoint {
 						remote-endpoint = <&usb_host0_xhci_drd_sw>;
 					};
@@ -378,7 +377,6 @@
 
 				port@1 {
 					reg = <1>;
-
 					usbc0_ss: endpoint {
 						remote-endpoint = <&usbdp_phy0_typec_ss>;
 					};
@@ -386,7 +384,6 @@
 
 				port@2 {
 					reg = <2>;
-
 					usbc0_sbu: endpoint {
 						remote-endpoint = <&usbdp_phy0_typec_sbu>;
 					};
@@ -963,7 +960,26 @@
 };
 
 &usbdp_phy0 {
+	mode-switch;
+	orientation-switch;
+	sbu1-dc-gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
+	sbu2-dc-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
 	status = "okay";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		usbdp_phy0_typec_ss: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&usbc0_ss>;
+		};
+
+		usbdp_phy0_typec_sbu: endpoint@1 {
+			reg = <1>;
+			remote-endpoint = <&usbc0_sbu>;
+		};
+	};
 };
 
 &usbdp_phy1 {
@@ -1000,26 +1016,4 @@
 &usb_host1_xhci {
 	dr_mode = "host";
 	status = "okay";
-};
-
-&usbdp_phy0 {
-	mode-switch;
-	orientation-switch;
-	sbu1-dc-gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
-	sbu2-dc-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
-
-	port {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		usbdp_phy0_typec_ss: endpoint@0 {
-			reg = <0>;
-			remote-endpoint = <&usbc0_ss>;
-		};
-
-		usbdp_phy0_typec_sbu: endpoint@1 {
-			reg = <1>;
-			remote-endpoint = <&usbc0_sbu>;
-		};
-	};
 };
